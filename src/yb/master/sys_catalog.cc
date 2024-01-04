@@ -659,6 +659,9 @@ Status SysCatalogTable::OpenTablet(const scoped_refptr<tablet::RaftGroupMetadata
 
   RETURN_NOT_OK_PREPEND(tablet_peer()->Start(consensus_info), "Failed to Start() TabletPeer");
 
+  // Enable flush retryable requests after the peer is fully initialized.
+  tablet_peer()->EnableFlushRetryableRequests();
+
   tablet_peer()->RegisterMaintenanceOps(master_->maintenance_manager());
 
   if (!tablet->schema()->Equals(doc_read_context_->schema())) {
